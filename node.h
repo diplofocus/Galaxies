@@ -31,7 +31,6 @@ public:
 	int GetOct(Body *body);
 	Vect CalcForce(Body *calculatedBody);
 	//double GetSize(Body **bodies);
-
 };
 
 ostream &operator<<(ostream &O, Node &B);

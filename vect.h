@@ -25,7 +25,6 @@ public:
 		this->z = _z;
 	}
 
-
 	Vect operator-(const Vect &v)
 	{
 		Vect r;
@@ -118,7 +117,7 @@ public:
 		ret.x = this->z * sin(theta) + this->x * cos(theta);
 		ret.y = this->y;
 
-	return ret;
+		return ret;
 	}
 };
 

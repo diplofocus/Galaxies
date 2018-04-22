@@ -12,7 +12,6 @@ extern int elements;
 
 static int GalaxyID = 0;
 
-
 Vect GalaxySpeed(double Mass1, double Mass2, Vect Pos1, Vect Pos2, double Rmin)
 {
 	Vect Dist = Pos1 - Pos2;
@@ -31,7 +30,7 @@ Vect GalaxySpeed(double Mass1, double Mass2, Vect Pos1, Vect Pos2, double Rmin)
 	return ret;
 }
 
-Vect OrbitalSpeed(Body *B, double angle, double Dist, double Mass  , double direction)
+Vect OrbitalSpeed(Body *B, double angle, double Dist, double Mass, double direction)
 {
 	double Speed = sqrt(G * (Mass + B->m) / Dist);
 	Vect ret;
@@ -118,7 +117,6 @@ void CreateGalaxy(Body **bodies, double GalaxyMass, Vect GalaxyPos, Vect GalaxyV
 		bodies[i]->parent = GalaxyID;
 	}
 	GalaxyID++;
-
 }
 
 void CreatePointMass(Body **bodies, double GalaxyMass, Vect GalaxyPos, Vect GalaxyVel, int Start)

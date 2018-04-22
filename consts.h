@@ -3,7 +3,7 @@
 
 const double theta = 0.6;
 
-const double G =  6.67e-11;
+const double G = 6.67e-11;
 const double tmax = 5e9 * (60 * 60 * 24 * 365.25);
 const double dt = 0.5e6 * (60 * 60 * 24 * 365.25);
 
@@ -22,9 +22,7 @@ const double Galaxy2Mass = 0.5 * 1e11 * 2e30;
 
 const double damp = 50 * 3.08567758e16;
 
-
 #endif
-
 
 // Vect Gr1(Rmin, Rmin, Rmin);
 // Vect Gr2(-Rmin, Rmin, -Rmin);

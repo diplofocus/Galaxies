@@ -14,14 +14,13 @@ const int BNW = 2;
 const int BSE = 1;
 const int BSW = 0;
 
-
 int NodeCounter = 0;
 
 //Contructor
 Node::Node(Vect _center, double _size)
 {
     center = _center;
-    size = _size;// + (_size * 0.1);
+    size = _size; // + (_size * 0.1);
     // cout << size << endl;
     for (int i = 0; i < 8; i++)
     {
@@ -97,7 +96,6 @@ void Node::InsertToNode(Body *NewBody)
             // cout << size;
             NodeBody = NewBody;
         }
-
     }
     //Increase the number of particles in the node;
     this->NodeBodyCount++;
@@ -126,7 +124,6 @@ void Node::InsertToNode(Body *NewBody)
 //    }
 //    return num;
 // }
-
 
 //Returns the quadrant in which the forwarded body belongs.
 //Returns number from 0 to 7.
@@ -186,7 +183,7 @@ int Node::GetOct(Body *body)
     // }
     Vect posRelToNode = body->r - this->center;
     // cout << posRelToNode << '\t' << this << endl;
-    return (posRelToNode.x > 0)        |
+    return (posRelToNode.x > 0) |
            ((posRelToNode.y > 0) << 1) |
            ((posRelToNode.z > 0) << 2);
 }
@@ -229,7 +226,6 @@ void Node::ComputeMassDistribution()
     }
 }
 
-
 // Main point of the algorhythm.
 // Calculates the force exerted on a body by traversing the BH tree and checking whether approximations can me used.
 Vect Node::CalcForce(Body *calculatedBody)
@@ -243,7 +239,7 @@ Vect Node::CalcForce(Body *calculatedBody)
         {
             Vect dist = calculatedBody->r - NodeBody->r;
             if (dist.Int() < damp)
-            return zeros;
+                return zeros;
             Force = dist * (-G * calculatedBody->m * this->mass / dist.CubeInt());
             return Force;
         }
@@ -343,4 +339,3 @@ Vect GetCenter(int octant)
 
     return ort;
 }
-

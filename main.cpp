@@ -1,6 +1,5 @@
 #include <iostream>
 #include <math.h>
-#include <fstream>
 #include <string>
 #include <stdlib.h>
 
@@ -11,11 +10,6 @@
 #include "node.h"
 
 int elements = 0;
-// Vect Galaxy1Pos(-3 * Rmin, -1 * Rmin, 2 * Rmin);
-// Vect Galaxy1Vel;
-// Vect Galaxy2Pos(3 * Rmin, 3 * Rmin, 0);
-// Vect Galaxy2Vel;
-//int NodeCounter = 0;
 
 Vect Galaxy1Pos(-200 * distConversion, 0 * distConversion, 0);
 Vect Galaxy1Vel(100000, 0, 0);
@@ -23,11 +17,7 @@ Vect Galaxy2Pos(200 * distConversion, 0 * distConversion, -15 * distConversion);
 Vect Galaxy2Vel(-100000, 0, 0);
 Vect InitialCenter(0, 0, 0);
 
-extern int ubijme;
-char GoTosAreBadAndIfYouUseThemYouShouldFeelBad;
 double LastSnapTime = 0;
-
-// void PrintSnapshot(int snapNum, Body *bodies);
 
 ifstream input;
 ofstream out;
@@ -51,7 +41,7 @@ inline double sqr(double a)
 	return a * a;
 }
 
-double PEn(Body** b)
+double PEn(Body **b)
 {
 	double P = 0;
 
@@ -62,7 +52,7 @@ double PEn(Body** b)
 			if (i != j)
 			{
 				Vect d = b[i]->r - b[j]->r;
-				P -= G*b[i]->m*b[j]->m/d.Int();
+				P -= G * b[i]->m * b[j]->m / d.Int();
 			}
 		}
 	}
@@ -72,25 +62,24 @@ double PEn(Body** b)
 double GetSize(Body **bodies)
 {
 	if (bodies == NULL)
-		{
-			return 0;
-		}
+	{
+		return 0;
+	}
 	else
+	{
+		double sizemax = 0;
+		for (int i = 0; i < elements; i++)
 		{
-			double sizemax = 0;
-			for (int i = 0; i < elements; i++)
-				{
-					if (abs(bodies[i]->r.x) > sizemax)
-						sizemax = abs(bodies[i]->r.x);
-					if (abs(bodies[i]->r.y) > sizemax)
-						sizemax = abs(bodies[i]->r.y);
-					if (abs(bodies[i]->r.z) > sizemax)
-						sizemax = abs(bodies[i]->r.z);
-				}
-			//added abs to return
-			return sizemax;
+			if (abs(bodies[i]->r.x) > sizemax)
+				sizemax = abs(bodies[i]->r.x);
+			if (abs(bodies[i]->r.y) > sizemax)
+				sizemax = abs(bodies[i]->r.y);
+			if (abs(bodies[i]->r.z) > sizemax)
+				sizemax = abs(bodies[i]->r.z);
 		}
-
+		//added abs to return
+		return sizemax;
+	}
 }
 
 int snapshotCount = 0;
@@ -117,144 +106,118 @@ int main()
 	getline(input, s);
 	sscanf(s.c_str(), "%d", &bulge);
 
-
 	elements = disk + halo + bulge;
 	setup << elements << "\t";
 
 	Body *bodies[elements];
-	Body **massiveBodies;
-	Body *A, *B;
 
 	for (int i = 0; i < elements; i++)
-		{
-			bodies[i] = new Body();
-		}
+	{
+		bodies[i] = new Body();
+	}
 
 	for (int i = 0; i < elements; ++i)
+	{
+		double unM = 0;
+		Vect unR, unV;
+		getline(input, s);
+		if (!s.empty())
 		{
-			double unM = 0;
-			Vect unR, unV;
-			getline(input, s);
-			if (!s.empty())
-				{
-					sscanf(s.c_str(), "%lf %lf %lf %lf %lf %lf %lf", &unM, &unR.x, &unR.y, &unR.z, &unV.x, &unV.y, &unV.z);
-				}
-			if (i < elements / 2)
-				{
-					bodies[i]->m = unM * massConversion;
-					bodies[i]->r = unR * distConversion;
-					bodies[i]->v = unV * speedConversion;
-				}
-			else
-				{
-					bodies[i]->m = unM * massConversion;
-					bodies[i]->r = unR * distConversion;
-					bodies[i]->v = unV * speedConversion;
-				}
-			if (i < elements / 2)
-				{
-					bodies[i]->r = bodies[i]->r.RotateY(60 * rad);
-					bodies[i]->v = bodies[i]->v.RotateY(60 * rad);
-					bodies[i]->r += Galaxy1Pos;
-					bodies[i]->v += Galaxy1Vel;
-				}
-			else
-				{
-					bodies[i]->r = bodies[i]->r.RotateY(120 * rad);
-					bodies[i]->v = bodies[i]->v.RotateY(120 * rad);
-//	 bodies[i]->r = bodies[i]->r.Rotate(180 * rad);
-//	 bodies[i]->v = bodies[i]->v.Rotate(180 * rad);
-
-					bodies[i]->r += Galaxy2Pos;
-					bodies[i]->v += Galaxy2Vel;
-				}
+			sscanf(s.c_str(), "%lf %lf %lf %lf %lf %lf %lf", &unM, &unR.x, &unR.y, &unR.z, &unV.x, &unV.y, &unV.z);
 		}
+		if (i < elements / 2)
+		{
+			bodies[i]->m = unM * massConversion;
+			bodies[i]->r = unR * distConversion;
+			bodies[i]->v = unV * speedConversion;
+		}
+		else
+		{
+			bodies[i]->m = unM * massConversion;
+			bodies[i]->r = unR * distConversion;
+			bodies[i]->v = unV * speedConversion;
+		}
+		if (i < elements / 2)
+		{
+			bodies[i]->r = bodies[i]->r.RotateY(60 * rad);
+			bodies[i]->v = bodies[i]->v.RotateY(60 * rad);
+			bodies[i]->r += Galaxy1Pos;
+			bodies[i]->v += Galaxy1Vel;
+		}
+		else
+		{
+			bodies[i]->r = bodies[i]->r.RotateY(120 * rad);
+			bodies[i]->v = bodies[i]->v.RotateY(120 * rad);
+			bodies[i]->r += Galaxy2Pos;
+			bodies[i]->v += Galaxy2Vel;
+		}
+	}
 
-
-
-	// Vect Galaxy1Vel = GalaxySpeed(Galaxy1Mass, Galaxy2Mass, Galaxy1Pos, Galaxy2Pos, Rmin) * -1;
-	// Vect Galaxy2Vel = GalaxySpeed(Galaxy2Mass, Galaxy1Mass, Galaxy2Pos, Galaxy1Pos, Rmin) * -1;
-
-	// CreateGalaxy(bodies, Galaxy1Mass, Galaxy1Pos, Galaxy1Vel, 1, -1, 0);
-	// CreateGalaxy(bodies, Galaxy2Mass, Galaxy2Pos, Galaxy2Vel, 1, 1, 121);
-
-//Single galaxy - halo
-//elements /= 2;
-//elements -=  11000;
-
-	int snpCount = 0;
 	for (double t = 0; t <= tmax; t += dt)
+	{
+		//BARNES HUT!!!
+		//HERE BE DRAGONS!
+
+		double Nsize = GetSize(bodies);
+		Node *root = new Node(InitialCenter, Nsize);
+		for (int i = 0; i < elements; ++i)
 		{
-
-			//BARNES HUT!!!
-			//HERE BE DRAGONS!
-
-			double Nsize = GetSize(bodies);
-			Node *root = new Node(InitialCenter, Nsize);
-			for (int i = 0; i < elements; ++i)
-				{
-					root->InsertToNode(bodies[i]);
-				}
-
-			root->ComputeMassDistribution();
-
-			if (t / tmax >= lastPercTime + 0.01)
-				{
-					cout << ++currPerc << "\r";
-					lastPercTime = currPerc / 100.0;
-					fflush(stdout);
-				}
-
-			if (t > LastSnapTime + snapshot || t == 0)
-				{
-					// cout << "pls" << endl;
-					LastSnapTime = t;
-					ofstream snap;
-					s = std::to_string(snapshotCount);
-					snap.open(snp + s);
-					for (int i = 0; i < elements; i++)
-						{
-							snap << *bodies[i] << endl;
-						}
-					snapshotCount++;
-					snap.close();
-
-					double PotEn = 0;
-					double KinEn = 0;
-
-					for (int i = 0; i < elements; i++)
-						{
-							KinEn += bodies[i]->m * bodies[i]->v.Int() * bodies[i]->v.Int() / 2	;
-						}
-						double P = PEn(bodies);
-					energy << t << "\t" << KinEn << "\t" << P <<endl;
-
-				}
-
-
-			for (int i = 0; i < elements; ++i)
-				{
-					bodies[i]->F = root->CalcForce(bodies[i]);
-					bodies[i]->a = bodies[i]->F / bodies[i]->m;
-				}
-
-			for (int i = 0; i < elements; i++)
-				{
-					bodies[i]->v += bodies[i]->a * dt;
-					bodies[i]->r += bodies[i]->v * dt;
-				}
-
-			//flush
-			for (int i = 0; i < elements; i++)
-				{
-					bodies[i]->a.x = 0;
-					bodies[i]->a.y = 0;
-					bodies[i]->a.z = 0;
-				}
-			//flush
-			delete root;
-
+			root->InsertToNode(bodies[i]);
 		}
+
+		root->ComputeMassDistribution();
+
+		if (t / tmax >= lastPercTime + 0.01)
+		{
+			cout << ++currPerc << "\r";
+			lastPercTime = currPerc / 100.0;
+			fflush(stdout);
+		}
+
+		if (t > LastSnapTime + snapshot || t == 0)
+		{
+			// cout << "pls" << endl;
+			LastSnapTime = t;
+			ofstream snap;
+			s = std::to_string(snapshotCount);
+			snap.open(snp + s);
+			for (int i = 0; i < elements; i++)
+			{
+				snap << *bodies[i] << endl;
+			}
+			snapshotCount++;
+			snap.close();
+
+			double KinEn = 0;
+
+			for (int i = 0; i < elements; i++)
+			{
+				KinEn += bodies[i]->m * bodies[i]->v.Int() * bodies[i]->v.Int() / 2;
+			}
+			double P = PEn(bodies);
+			energy << t << "\t" << KinEn << "\t" << P << endl;
+		}
+
+		for (int i = 0; i < elements; ++i)
+		{
+			bodies[i]->F = root->CalcForce(bodies[i]);
+			bodies[i]->a = bodies[i]->F / bodies[i]->m;
+		}
+		for (int i = 0; i < elements; i++)
+		{
+			bodies[i]->v += bodies[i]->a * dt;
+			bodies[i]->r += bodies[i]->v * dt;
+		}
+
+		//flush
+		for (int i = 0; i < elements; i++)
+		{
+			bodies[i]->a.x = 0;
+			bodies[i]->a.y = 0;
+			bodies[i]->a.z = 0;
+		}
+		delete root;
+	}
 
 	setup << snapshotCount;
 
@@ -266,59 +229,3 @@ int main()
 	cout << "Done!" << endl;
 	return 0;
 }
-
-// void PrintSnapshot(int snapNum, Body *bodies)
-// {
-//    ofstream snapshot;
-//    s = std::to_string(snapNum);
-//    snapshot.open(snp + s);
-//    for (int i = 0; i < elements; i++)
-//    {
-//       snapshot << *bodies[i] << endl;
-//    }
-//    snapshot.close();
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//If you venture here, be warned
-//Deni be gay.Protect yer buttholes.

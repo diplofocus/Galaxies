@@ -27,7 +27,6 @@ public:
 	{
 		return m > 0;
 	}
-
 };
 
 Body **GetMassiveBodies(Body **B);
@@ -36,4 +35,3 @@ ostream &operator<<(ostream &O, Body &B);
 ostream &operator<<(ostream &O, Vect &B);
 
 #endif
-
